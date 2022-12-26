@@ -21,4 +21,4 @@ using namespace std;
 namespace fs = std::filesystem;
 
 bool collect(DirObject* baseDirObj);
-string find(string fileName, DirObject* baseDirObj, ThreadPool* threadPool);
+vector<string>* find(string fileName, DirObject* baseDirObj, ThreadPool* threadPool);

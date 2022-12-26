@@ -35,6 +35,9 @@ int main(int argc, char** argv) {
 			string threadsCountStr = args[i + 1];
 			if (sscanf(args[i + 1].c_str(), "%d", &threadsCount) == 1)
 			{
+				cout << "Can`t convert --nem_threads value { " << args[i + 1] << " } to int" << endl;
+				cin.get();
+				return -3;
 			}
 		}
 	}
@@ -62,16 +65,21 @@ int main(int argc, char** argv) {
 
 	cout << "Collected files and directories!" << endl;
 
-	string reult = find(fileName, &baseDirObj, threadPool);
+	vector<string>* result = find(fileName, &baseDirObj, threadPool);
 
-	if (!reult.empty())
+	if (!result->empty())
 	{
-		cout << "Found file: " << reult << endl;
+		for (string resPath : *result)
+		{
+			cout << "Found file: " << resPath << endl;
+		}
 	}
 	else
 	{
 		cout << "Can`t find this file: " << fileName << endl;
 	}
+
+	cout << "End" << endl;
 	cin.get();
 	return 0;
 }
@@ -86,7 +94,7 @@ bool collect(DirObject* baseDirObj)
 	return false;
 }
 
-string find(string fileName, DirObject* baseDirObj, ThreadPool* threadPool)
+vector<string>* find(string fileName, DirObject* baseDirObj, ThreadPool* threadPool)
 {
 	return baseDirObj->findFile(fileName, threadPool);
 }

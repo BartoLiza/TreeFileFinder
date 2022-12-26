@@ -39,7 +39,7 @@ public:
 	void collectChilds();
 	void collectChildsRecursive();
 	bool checkDir();
-	string findFile(const string fileName, ThreadPool* threadPool);
+	vector<string>* findFile(const string fileName, ThreadPool* threadPool);
 };
 
 

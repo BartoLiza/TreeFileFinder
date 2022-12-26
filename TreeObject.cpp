@@ -79,7 +79,7 @@ void DirObject::collectChildsRecursive()
 	}
 }
 
-string DirObject::findFile(const string fileName, ThreadPool* threadPool)
+vector<string>* DirObject::findFile(const string fileName, ThreadPool* threadPool)
 {
 	if (threadPool->tryGetThread())
 	{
@@ -88,7 +88,7 @@ string DirObject::findFile(const string fileName, ThreadPool* threadPool)
 	}
 
 	vector<string>* res = results.getResults();
-	return res->size() > 0 ? (*res)[0] : "";
+	return res;
 }
 
 void findFileThread(DirObject* dir, const string fileName, ThreadPool* threadPool)
