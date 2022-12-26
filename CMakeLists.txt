@@ -6,7 +6,7 @@ cmake_minimum_required (VERSION 3.8)
 project ("TreeFileFinder")
 
 # Добавьте источник в исполняемый файл этого проекта.
-add_executable (TreeFileFinder "TreeFileFinder.cpp" "TreeFileFinder.h" "TreeObject.cpp" "TreeObject.h" "ThreadPool.cpp" "ThreadPool.h")
+add_executable (TreeFileFinder "TreeFileFinder.cpp" "TreeFileFinder.h" "TreeObject.cpp" "TreeObject.h" "ThreadPool.cpp" "ThreadPool.h" "ResultsObject.cpp" "ResultsObject.h")
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET TreeFileFinder PROPERTY CXX_STANDARD 20)

@@ -4,6 +4,9 @@
 #pragma once
 
 #include <iostream>
+#include <string>
+#include <vector>
+#include <filesystem>
 
 #include "TreeObject.h"
 
@@ -18,3 +21,4 @@ using namespace std;
 namespace fs = std::filesystem;
 
 bool collect(DirObject* baseDirObj);
+string find(string fileName, DirObject* baseDirObj, ThreadPool* threadPool);

@@ -2,6 +2,7 @@
 //
 
 #include "TreeFileFinder.h"
+#include "ThreadPool.h"
 
 
 int main(int argc, char** argv) {
@@ -49,16 +50,28 @@ int main(int argc, char** argv) {
 		return -2;
 	}
 
-	DirObject baseDirObj(basePath);
-
 	cout << "Threads count " << threadsCount << " threads..." << endl;
 
-	cout << "Collecting files and directories " << threadsCount << " threads..." << endl;
+	ThreadPool* threadPool = new ThreadPool(threadsCount);
+
+	DirObject baseDirObj(basePath);
+
+	cout << "Collecting files and directories" << endl;
 
 	collect(&baseDirObj);
 
 	cout << "Collected files and directories!" << endl;
 
+	string reult = find(fileName, &baseDirObj, threadPool);
+
+	if (!reult.empty())
+	{
+		cout << "Found file: " << reult << endl;
+	}
+	else
+	{
+		cout << "Can`t find this file: " << fileName << endl;
+	}
 	cin.get();
 	return 0;
 }
@@ -71,4 +84,9 @@ bool collect(DirObject* baseDirObj)
 		return true;
 	}
 	return false;
+}
+
+string find(string fileName, DirObject* baseDirObj, ThreadPool* threadPool)
+{
+	return baseDirObj->findFile(fileName, threadPool);
 }

@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <filesystem>
+#include "ThreadPool.h"
 
 using namespace std;
 namespace fs = std::filesystem;
@@ -21,6 +22,9 @@ public:
 
 class FileObject : public TreeObject
 {
+public:
+	FileObject(string fullPath);
+	FileObject(fs::path fullPath);
 };
 
 class DirObject : public TreeObject
@@ -35,4 +39,9 @@ public:
 	void collectChilds();
 	void collectChildsRecursive();
 	bool checkDir();
+	string findFile(const string fileName, ThreadPool* threadPool);
 };
+
+
+
+void findFileThread(DirObject* dir, const string fileName, ThreadPool* threadPool);
