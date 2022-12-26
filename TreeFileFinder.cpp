@@ -17,6 +17,8 @@ int main(int argc, char** argv) {
 	
 	if (args.size() <= 1)
 	{
+		cout << "Missing file name parameter" << endl;
+		cin.get();
 		return -1;
 	}
 
