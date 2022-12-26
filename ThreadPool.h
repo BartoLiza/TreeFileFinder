@@ -1,11 +1,11 @@
 #pragma once
 
-#include <mutex>
+#include <mutex> 
 
 class ThreadPool
 {
 public:
-	ThreadPool();
+	ThreadPool(); // конструктор по умолчанию - 0 потоков
 	ThreadPool(int maxThreadsCount);
 
 	void setMaxThreads(int maxThreadsCount);
@@ -16,5 +16,5 @@ public:
 private:
 	int freeThreadsCount;
 	int maxThreadsCount;
-	std::mutex locker;
+	std::mutex locker; // для синхрониации данных м/д потоков
 };

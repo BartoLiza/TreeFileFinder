@@ -7,7 +7,7 @@
 #include "ThreadPool.h"
 
 using namespace std;
-namespace fs = std::filesystem;
+namespace fs = std::filesystem; // filesystem - файловая система компьютера
 
 class TreeObject
 {

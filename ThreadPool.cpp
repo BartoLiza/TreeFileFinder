@@ -9,12 +9,12 @@ ThreadPool::ThreadPool()
 ThreadPool::ThreadPool(int maxThreadsCount)
 {
 	freeThreadsCount = maxThreadsCount;
-	this->maxThreadsCount = maxThreadsCount;
+	this->maxThreadsCount = maxThreadsCount; //this-> - чтобы обратиться к элементу класса
 }
 
 void ThreadPool::setMaxThreads(int maxThreadsCount)
 {
-	locker.lock();
+	locker.lock(); 
 	freeThreadsCount = freeThreadsCount + maxThreadsCount - this->maxThreadsCount;
 	this->maxThreadsCount = maxThreadsCount;
 	locker.unlock();
