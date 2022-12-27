@@ -80,13 +80,9 @@ void DirObject::collectChildsRecursive() //
 
 vector<string>* DirObject::findFile(const string fileName, ThreadPool* threadPool)
 {
-	if (threadPool->tryGetThread()) // если есть сободный поток
-	{
-		thread thr(findFileThread, this, fileName, threadPool); // создаем новый поток и передаем в функцию потока текущий узел, имя искомого файла и пул потоков
-		thr.join(); // ожидаем окончание выполнения потока
-	}
-
-	vector<string>* res = results.getResults(); // 
+	threadPool->tryGetThread(); // учитываем главный поток
+	findFileThread(this, fileName, threadPool); // начинаем поиск в главном потоке
+	vector<string>* res = results.getResults();  // забираем и возвращаем результаты поиска
 	return res;
 }
 
@@ -100,48 +96,48 @@ void findFileThread(DirObject* dir, const string fileName, ThreadPool* threadPoo
 		}
 	}
 
-	if (dir->dirs.size() > 0) // если кол-во папок 
+	if (dir->dirs.size() > 0) // если есть вложенные папки
 	{
-		vector<DirObject*> dirsToFindInThread;
+		vector<DirObject*> dirsToFindInThread; // вектор с папками на которые хватило потоков
 
-		vector<thread> childThreads;
+		vector<thread> childThreads;// вектор с потоками в данном узле 
 
 
-		for (int i = 0; i + 1 < dir->dirs.size(); i++)
+		for (int i = 0; i + 1 < dir->dirs.size() ; i++)
 		{
 			if (threadPool->tryGetThread())
 			{
-				dirsToFindInThread.push_back(dir->dirs[i]);
+				dirsToFindInThread.push_back(dir->dirs[i]); // добавляем папку в вектор на которую хватило потока
 			}
 			else
 			{
 
-				for (DirObject* nextDir : dirsToFindInThread)
+				for (DirObject* nextDir : dirsToFindInThread) // перебираем вектор папок на которые хватило потоков
 				{
-					childThreads.push_back(thread(findFileThread, nextDir, fileName, threadPool));
+					childThreads.push_back(thread(findFileThread, nextDir, fileName, threadPool)); // создаем новый поток поиска в следующей папке и добавляем
 				}
 
-				dirsToFindInThread.clear();
+				dirsToFindInThread.clear(); // очищаем вектор с папками на которые хватило потоков
 
-				findFileThread(dir->dirs[i], fileName, threadPool);
+				findFileThread(dir->dirs[i], fileName, threadPool); // продолжаем поиск в том же потоке 
 			}
 		}
 
-		for (DirObject* nextDir : dirsToFindInThread)
+		for (DirObject* nextDir : dirsToFindInThread) // перебираем вектор папок на которые хватило потоков 
 		{
-			childThreads.push_back(thread(findFileThread, nextDir, fileName, threadPool));
+			childThreads.push_back(thread(findFileThread, nextDir, fileName, threadPool));// создаем новый поток поиска в следующей папке и добавляем
 		}
 
-		dirsToFindInThread.clear();
+		dirsToFindInThread.clear(); // очищаем вектор с папками на которые хватило потоков
 
-		findFileThread(dir->dirs[dir->dirs.size() - 1], fileName, threadPool);
+		findFileThread(dir->dirs[dir->dirs.size() - 1], fileName, threadPool); // продолжаем поиск для последней папки в том же потоке 
 
-		for (int i = 0; i < childThreads.size(); i++)
+		for (int i = 0; i < childThreads.size(); i++) // перебираеем вектор потоков созданых к текущей папке
 		{
-			childThreads[i].join();
+			childThreads[i].join(); // ожидаем окончание потоков 
 		}
 	}
 
-	threadPool->tryReturnThread();
+	threadPool->tryReturnThread(); // возвращаем поток для текущей папки
 	return;
 }

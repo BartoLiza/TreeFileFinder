@@ -63,13 +63,13 @@ int main(int argc, char** argv) {
 
 	cout << "Threads count " << threadsCount << " threads..." << endl; 
 
-	ThreadPool* threadPool = new ThreadPool(threadsCount);
+	ThreadPool* threadPool = new ThreadPool(threadsCount); //создаем пул потоков и задаем max кол-во
 
-	DirObject baseDirObj(basePath);
+	DirObject baseDirObj(basePath); // создаем главный узел дерева
 
 	cout << "Collecting files and directories" << endl;
 
-	collect(&baseDirObj);
+	collect(&baseDirObj); // сбор узлов дерева
 
 	cout << "Collected files and directories!" << endl;
 
@@ -77,7 +77,7 @@ int main(int argc, char** argv) {
 
 	if (!result->empty())
 	{
-		for (string resPath : *result)
+		for (string resPath : *result) //перебираем список путей надйнных файлов
 		{
 			cout << "Found file: " << resPath << endl;
 		}
@@ -94,15 +94,15 @@ int main(int argc, char** argv) {
 
 bool collect(DirObject* baseDirObj)
 {
-	if (baseDirObj->checkDir())
+	if (baseDirObj->checkDir()) // если доступна
 	{
-		baseDirObj->collectChildsRecursive();
+		baseDirObj->collectChildsRecursive(); // собираем дерево рекурсивно
 		return true;
 	}
 	return false;
 }
 
-vector<string>* find(string fileName, DirObject* baseDirObj, ThreadPool* threadPool)
+vector<string>* find(string fileName, DirObject* baseDirObj, ThreadPool* threadPool) 
 {
-	return baseDirObj->findFile(fileName, threadPool);
+	return baseDirObj->findFile(fileName, threadPool); // ищем в главном узле дерева файл рекурсивно
 }

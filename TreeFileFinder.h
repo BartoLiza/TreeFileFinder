@@ -20,5 +20,5 @@
 using namespace std;
 namespace fs = std::filesystem;
 
-bool collect(DirObject* baseDirObj);
-vector<string>* find(string fileName, DirObject* baseDirObj, ThreadPool* threadPool);
+bool collect(DirObject* baseDirObj); // собираем дерево
+vector<string>* find(string fileName, DirObject* baseDirObj, ThreadPool* threadPool); // для поиска нужно имя файла, главный узел, пул потоков

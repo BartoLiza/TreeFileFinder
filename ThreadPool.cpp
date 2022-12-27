@@ -12,7 +12,7 @@ ThreadPool::ThreadPool(int maxThreadsCount)
 	this->maxThreadsCount = maxThreadsCount; //this-> - чтобы обратиться к элементу класса
 }
 
-void ThreadPool::setMaxThreads(int maxThreadsCount)
+void ThreadPool::setMaxThreads(int maxThreadsCount) // если во время работы программы изенится max кол-во потоков 
 {
 	locker.lock(); 
 	freeThreadsCount = freeThreadsCount + maxThreadsCount - this->maxThreadsCount;
@@ -20,12 +20,12 @@ void ThreadPool::setMaxThreads(int maxThreadsCount)
 	locker.unlock();
 }
 
-bool ThreadPool::tryGetThread()
+bool ThreadPool::tryGetThread() // для проверки свободных потоков для использования
 {
 	while (true)
 	{
-		if (locker.try_lock()) {
-			bool hasFreeThread = freeThreadsCount > 0;
+		if (locker.try_lock()) { // try_lock() пытаемся заблокировать mutex
+			bool hasFreeThread = freeThreadsCount > 0; // true, если есть свободные потоки 
 			if (hasFreeThread)
 			{
 				freeThreadsCount--;
@@ -34,16 +34,15 @@ bool ThreadPool::tryGetThread()
 			return hasFreeThread;
 		}
 	}
-
 	return false;
 }
 
-bool ThreadPool::tryReturnThread()
+bool ThreadPool::tryReturnThread() // для возврата занятого потока в свободный
 {
 	while (true)
 	{
 		if (locker.try_lock()) {
-			bool hasFreeThread = freeThreadsCount < maxThreadsCount - 1;
+			bool hasFreeThread = freeThreadsCount < maxThreadsCount - 1; // контроль свободных потоков (не больше max)
 			if (hasFreeThread)
 			{
 				freeThreadsCount++;
@@ -52,6 +51,5 @@ bool ThreadPool::tryReturnThread()
 			return hasFreeThread;
 		}
 	}
-
 	return false;
 }

@@ -17,4 +17,4 @@ private:
 	mutex readWriteMutex;
 };
 
-static ResultsObject results;
+static ResultsObject results; // статическая переменная результатов поиска, которая доступна из любой точки программы 
