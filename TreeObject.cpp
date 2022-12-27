@@ -21,6 +21,21 @@ FileObject::FileObject(fs::path fullPath) : TreeObject(fullPath) {}
 DirObject::DirObject(string fullPath) : TreeObject(fullPath) {}
 DirObject::DirObject(fs::path fullPath) : TreeObject(fullPath) {}
 
+DirObject::~DirObject()
+{
+	for (DirObject* dir : dirs)
+	{
+		delete(dir);
+	}
+	dirs.clear();
+
+	for (FileObject* file : files)
+	{
+		delete(file);
+	}
+	files.clear();
+}
+
 bool DirObject::checkDir()
 {
 	try {

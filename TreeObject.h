@@ -38,6 +38,8 @@ public:
 	DirObject(string fullPath);
 	DirObject(fs::path fullPath);
 
+	~DirObject(); // в этом деструкторе очищаяем память выделеную под объекты в векторах dirs и files
+
 	void collectChilds(); // собираем дочерние узлы из файловой системы
 	void collectChildsRecursive(); // собираем дочерние узлы из файловой системы ( в случае, если в папке содержится папка)
 	bool checkDir(); // провека пути папки на доступность в системе
