@@ -21,8 +21,14 @@ int main(int argc, char** argv) {
 		cin.get();
 		return -1;
 	}
+	string fileName = args[1];
 
-	string fileName = args[1]; // название файла
+	if (!(fileName != THREADS_COUNT_PARAM && fileName != PATH_PARAM && fileName != ""))
+	{
+		std::cout << "Name of file is not set" << endl;
+		return -1;
+	}
+		
 	string basePath = DEFAULT_BASE_PATH; // базовый путь по умолчанию (С)
 	int threadsCount = DEFAULT_THREADS_COUNT;//  по умолчанию (10)
 	
