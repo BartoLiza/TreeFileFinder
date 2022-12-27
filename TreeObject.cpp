@@ -93,28 +93,24 @@ vector<string>* DirObject::findFile(const string fileName, ThreadPool* threadPoo
 
 void findFileThread(DirObject* dir, const string fileName, ThreadPool* threadPool)
 {
-	bool success = false;
-
 	for (FileObject* file : dir->files)
 	{
 		if (file->name == fileName)
-		{
-			success = true;
-			
+		{	
 			results.putResult(file->fullPath.string());
 
 			break;
 		}
 	}
 
-	if (!success && dir->dirs.size()>0)
+	if (dir->dirs.size()>0)
 	{
 		vector<DirObject*> dirsToFindInThread;
 
 		vector<thread> childThreads;
 
 
-		for (int i = 0; i+1 < dir->dirs.size() && !success; i++)
+		for (int i = 0; i+1 < dir->dirs.size(); i++)
 		{
 			if (threadPool->tryGetThread())
 			{
