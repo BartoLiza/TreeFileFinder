@@ -16,5 +16,3 @@ private:
 	vector<string> results;
 	mutex readWriteMutex;
 };
-
-static ResultsObject results; // статическая переменная результатов поиска, которая доступна из любой точки программы 

@@ -3,18 +3,19 @@
 
 #include "TreeFileFinder.h"
 #include "ThreadPool.h"
+#include "ResultsObject.h"
 
 
 int main(int argc, char** argv) {
 
 	vector<string> args;
-	/* нулевой параметр - название программы, потом - название файла, который ищем + допю параметры --path/ --num_threads - либо путь, либо кол-во потоков. 
+	/* нулевой параметр - название программы, потом - название файла, который ищем + допю параметры --path/ --num_threads - либо путь, либо кол-во потоков.
 	путь - папка с которого начинаем строить дерево*/
 	for (int i = 0; i < argc; i++)
 	{
-		args.push_back(string(argv[i])); 
+		args.push_back(string(argv[i]));
 	}
-	
+
 	if (args.size() <= 1)
 	{
 		cout << "Missing file name parameter" << endl;
@@ -28,28 +29,29 @@ int main(int argc, char** argv) {
 		std::cout << "Name of file is not set" << endl;
 		return -1;
 	}
-		
+
 	string basePath = DEFAULT_BASE_PATH; // базовый путь по умолчанию (С)
 	int threadsCount = DEFAULT_THREADS_COUNT;//  по умолчанию (10)
-	
+
 	for (int i = 2; i < args.size(); i++)
 	{
 		if (args[i] == PATH_PARAM && i + 1 < args.size()) // если нашли --path и это не последний элемент вектора
 		{
-			basePath = args[i + 1];
+			i++;
+			basePath = args[i];
 		}
 		else if (args[i] == THREADS_COUNT_PARAM && i + 1 < args.size())// если нашли --num_threars и это не последний элемент вектора
 		{
-			string threadsCountStr = args[i + 1];
-			if (sscanf(args[i + 1].c_str(), "%d", &threadsCount) == 1) // преобразование строки (10) в число
+			i++;
+			if (sscanf(args[i].c_str(), "%d", &threadsCount) != 1) // преобразование строки (10) в число
 			{
-				cout << "Can`t convert --nem_threads value { " << args[i + 1] << " } to int" << endl;
+				cout << "Can`t convert --nem_threads value { " << args[i] << " } to int" << endl;
 				cin.get();
 				return -3;
 			}
 		}
 	}
-	
+
 	if (basePath.empty()) // --path  --num_threats 10
 	{
 		basePath = DEFAULT_BASE_PATH;
@@ -61,7 +63,7 @@ int main(int argc, char** argv) {
 		return -2;
 	}
 
-	cout << "Threads count " << threadsCount << " threads..." << endl; 
+	cout << "Threads count " << threadsCount << " threads..." << endl;
 
 	ThreadPool* threadPool = new ThreadPool(threadsCount); //создаем пул потоков и задаем max кол-во
 
@@ -73,7 +75,11 @@ int main(int argc, char** argv) {
 
 	cout << "Collected files and directories!" << endl;
 
-	vector<string>* result = find(fileName, &baseDirObj, threadPool);
+	ResultsObject* resultsObj = new ResultsObject();
+
+	find(fileName, &baseDirObj, threadPool, resultsObj);
+
+	vector<string>* result = resultsObj->getResults();
 
 	if (!result->empty())
 	{
@@ -92,17 +98,15 @@ int main(int argc, char** argv) {
 	return 0;
 }
 
-bool collect(DirObject* baseDirObj)
+void collect(DirObject* baseDirObj)
 {
 	if (baseDirObj->checkDir()) // если доступна
 	{
 		baseDirObj->collectChildsRecursive(); // собираем дерево рекурсивно
-		return true;
 	}
-	return false;
 }
 
-vector<string>* find(string fileName, DirObject* baseDirObj, ThreadPool* threadPool) 
+void find(string fileName, DirObject* baseDirObj, ThreadPool* threadPool, ResultsObject* resultsObj)
 {
-	return baseDirObj->findFile(fileName, threadPool); // ищем в главном узле дерева файл рекурсивно
+	return baseDirObj->findFile(fileName, threadPool, resultsObj); // ищем в главном узле дерева файл рекурсивно
 }

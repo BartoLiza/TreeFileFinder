@@ -9,6 +9,7 @@
 #include <filesystem>
 
 #include "TreeObject.h"
+#include "ResultsObject.h"
 
 
 #define PATH_PARAM "--path"
@@ -20,5 +21,5 @@
 using namespace std;
 namespace fs = std::filesystem;
 
-bool collect(DirObject* baseDirObj); // собираем дерево
-vector<string>* find(string fileName, DirObject* baseDirObj, ThreadPool* threadPool); // для поиска нужно имя файла, главный узел, пул потоков
+void collect(DirObject* baseDirObj); // собираем дерево
+void find(string fileName, DirObject* baseDirObj, ThreadPool* threadPool, ResultsObject* resultsObj); // для поиска нужно имя файла, главный узел, пул потоков

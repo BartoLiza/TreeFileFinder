@@ -4,7 +4,9 @@
 #include <string>
 #include <vector>
 #include <filesystem>
+
 #include "ThreadPool.h"
+#include "ResultsObject.h"
 
 using namespace std;
 namespace fs = std::filesystem; // filesystem - файловая система компьютера
@@ -39,9 +41,9 @@ public:
 	void collectChilds(); // собираем дочерние узлы из файловой системы
 	void collectChildsRecursive(); // собираем дочерние узлы из файловой системы ( в случае, если в папке содержится папка)
 	bool checkDir(); // провека пути папки на доступность в системе
-	vector<string>* findFile(const string fileName, ThreadPool* threadPool);
+	void findFile(const string fileName, ThreadPool* threadPool, ResultsObject* resultsObj);
 };
 
 
 
-void findFileThread(DirObject* dir, const string fileName, ThreadPool* threadPool);
+void findFileThread(DirObject* dir, const string fileName, ThreadPool* threadPool, ResultsObject* resultsObj, bool isNewThread);
