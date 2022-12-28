@@ -94,7 +94,6 @@ void DirObject::collectChildsRecursive() //
 
 void DirObject::findFile(const string fileName, ThreadPool* threadPool, ResultsObject* resultsObj)
 {
-	threadPool->tryGetThread(); // учитываем главный поток
 	findFileThread(this, fileName, threadPool, resultsObj, false); // начинаем поиск в главном потоке
 }
 

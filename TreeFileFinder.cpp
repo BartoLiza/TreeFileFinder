@@ -71,7 +71,7 @@ int main(int argc, char** argv) {
 
 
 
-	ThreadPool* threadPool = new ThreadPool(*threadsCount); //создаем пул потоков и задаем max кол-во
+	ThreadPool* threadPool = new ThreadPool((*threadsCount)-1); //создаем пул потоков и задаем max кол-во
 	delete(threadsCount); // очистка памяти занятой переменной threadsCount
 
 	DirObject* baseDirObj = new DirObject(*basePath); // создаем главный узел дерева
